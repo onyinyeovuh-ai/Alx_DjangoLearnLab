@@ -11,6 +11,7 @@ def book_list(request):
 @permission_required('bookshelf.can_create', raise_exception=True)
 def create_book(request):
     if request.method == 'POST':
+        # Using Django ORM instead of raw SQL to prevent SQL injection
         title = request.POST.get('title')
         author = request.POST.get('author')
 
@@ -27,6 +28,7 @@ def edit_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
 
     if request.method == 'POST':
+        # Using Django ORM instead of raw SQL to prevent SQL injection
         book.title = request.POST.get('title')
         book.author = request.POST.get('author')
         book.save()

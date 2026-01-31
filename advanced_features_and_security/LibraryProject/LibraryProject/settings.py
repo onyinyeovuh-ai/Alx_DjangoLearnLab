@@ -23,9 +23,38 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-7uhjqh1ss9788%gu*sei0aorry43(eoz3nw@w=u#6hhw$16#__'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-ALLOWED_HOSTS = []
+# SECURITY SETTINGS
+
+# Enable browser XSS filter
+SECURE_BROWSER_XSS_FILTER = True
+
+# prevent content type sniffing
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# prevent clickjacking
+X_FRAME_OPTIONS = 'DENY'
+
+# Ensure cookies are only sent over HTTPS
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+#Force HTTPS (only if HTTPS is set up) 
+SECURE_SSL_REDIRECT = True
+
+# Content Security Policy (CSP)
+# Restricts where resources can be loaded from to reduce XSS attacks
+CONTENT_SECURITY_POLICY = {
+    'DIRECTIVES': {
+        'default-src': ("'self'",),
+        'script-src': ("'self'",),
+        'style-src': ("'self'",),
+        'img-src': ("'self'",),
+        'font-src': ("'self'",),
+    }
+}
 
 # Application definition
 
@@ -39,10 +68,15 @@ INSTALLED_APPS = [
 
     'bookshelf',
     'relationship_app',
+
+    # Content Security Policy
+    'csp',
 ]
 
 
 MIDDLEWARE = [
+    'csp.middleware.CSPMiddleware',
+    
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
