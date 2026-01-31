@@ -54,6 +54,9 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 # Allow site to be preloaded in browser HSTS lists
 SECURE_HSTS_PRELOAD = True
 
+# Recognize HTTPS when behind a proxy/load balancer
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # Content Security Policy (CSP)
 # Restricts where resources can be loaded from to reduce XSS attacks
 CONTENT_SECURITY_POLICY = {
