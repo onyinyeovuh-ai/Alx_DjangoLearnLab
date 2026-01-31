@@ -44,6 +44,16 @@ SESSION_COOKIE_SECURE = True
 #Force HTTPS (only if HTTPS is set up) 
 SECURE_SSL_REDIRECT = True
 
+# HTTP Strict Transport Security (HSTS)
+# Browsers will only connect via HTTPS for the specified time
+SECURE_HSTS_SECONDS = 31536000  # 1 year in seconds
+
+# Include all subdomains in HSTS
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+# Allow site to be preloaded in browser HSTS lists
+SECURE_HSTS_PRELOAD = True
+
 # Content Security Policy (CSP)
 # Restricts where resources can be loaded from to reduce XSS attacks
 CONTENT_SECURITY_POLICY = {
