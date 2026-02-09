@@ -13,17 +13,17 @@ Permissions:
 - Write operations require authentication
 """
 
+from django_filters import rest_framework 
+from rest_framework import generics
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
-from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.filters import SearchFilter, OrderingFilter
-from django_filters.rest_framework import DjangoFilterBackend
 from .models import Book
 from .serializers import BookSerializer
 
 # -------------------------------
 # LIST VIEW WITH FILTERING, SEARCHING, ORDERING
 # -------------------------------
-class BookListView(ListAPIView):
+class BookListView(generics.ListAPIView):
     """
     Returns all books with advanced querying capabilities:
     - Filtering: by title, author name, publication_year
@@ -35,7 +35,7 @@ class BookListView(ListAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     # Add DRF filters
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filter_backends = [rest_framework.DjangoFilterBackend, SearchFilter, OrderingFilter]
 
     # Fields users can filter by (exact or ranges)
     filterset_fields = ['title', 'author__name', 'publication_year']
@@ -54,7 +54,7 @@ class BookListView(ListAPIView):
 # Returns one book by ID
 # Allows read-only access for everyone
 # -------------------------------
-class BookDetailView(RetrieveAPIView):
+class BookDetailView(generics.RetrieveAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -64,7 +64,7 @@ class BookDetailView(RetrieveAPIView):
 # CREATE VIEW
 # Allows authenticated users to create books
 # -------------------------------
-class BookCreateView(CreateAPIView):
+class BookCreateView(generics.CreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticated]
@@ -74,7 +74,7 @@ class BookCreateView(CreateAPIView):
 # UPDATE VIEW
 # Allows authenticated users to update books
 # -------------------------------
-class BookUpdateView(UpdateAPIView):
+class BookUpdateView(generics.UpdateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticated]
@@ -84,7 +84,7 @@ class BookUpdateView(UpdateAPIView):
 # DELETE VIEW
 # Allows authenticated users to delete books
 # -------------------------------
-class BookDeleteView(DestroyAPIView):
+class BookDeleteView(generics.DestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticated]
