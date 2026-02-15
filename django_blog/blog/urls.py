@@ -5,6 +5,9 @@ from .views import (
     PostCreateView,
     PostUpdateView,
     PostDeleteView,
+    CommentCreateView,
+    CommentUpdateView,
+    CommentDeleteView,
     register_view,
     profile_view,
     logout_view,
@@ -24,10 +27,10 @@ urlpatterns = [
     path("post/<int:pk>/delete/", PostDeleteView.as_view(), name="post-delete"),  # DELETE
 ]
 
-from . import views
+from .views import CommentCreateView, CommentUpdateView, CommentDeleteView
 
 urlpatterns += [
-    path("post/<int:post_id>/comments/new/", views.add_comment, name="comment-add"),
-    path("comments/<int:comment_id>/edit/", views.edit_comment, name="comment-edit"),
-    path("comments/<int:comment_id>/delete/", views.delete_comment, name="comment-delete"),
+    path("post/<int:post_id>/comments/new/", CommentCreateView.as_view(), name="comment-add"),
+    path("comments/<int:pk>/edit/", CommentUpdateView.as_view(), name="comment-edit"),
+    path("comments/<int:pk>/delete/", CommentDeleteView.as_view(), name="comment-delete"),
 ]
