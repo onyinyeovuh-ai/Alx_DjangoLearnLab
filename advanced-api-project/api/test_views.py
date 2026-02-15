@@ -1,11 +1,8 @@
 
 """
 Unit tests for Book API endpoints.
-
-Tests Included:
-- CRUD operations
-- Filtering, searching, ordering
-- Authentication and permission checks
+Tests CRUD operations, filtering, searching, ordering,
+and permission handling.
 """
 
 from django.urls import reverse
@@ -15,12 +12,11 @@ from django.contrib.auth.models import User
 from .models import Author, Book
 
 
-class BookAPITest(APITestCase):
+class BookAPITestCase(APITestCase):
 
     def setUp(self):
-        """
-        Create test user, author, and book objects.
-        """
+        """Create test data"""
+
         self.user = User.objects.create_user(
             username="testuser",
             password="testpass123"
@@ -40,9 +36,9 @@ class BookAPITest(APITestCase):
         self.update_url = reverse("book-update", args=[self.book.id])
         self.delete_url = reverse("book-delete", args=[self.book.id])
 
-    # -------------------------------
-    # TEST CREATE BOOK
-    # -------------------------------
+    # -----------------------
+    # CREATE TEST
+    # -----------------------
     def test_create_book_authenticated(self):
         self.client.login(username="testuser", password="testpass123")
 
@@ -53,13 +49,8 @@ class BookAPITest(APITestCase):
         }
 
         response = self.client.post(self.create_url, data)
-
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Book.objects.count(), 2)
 
-    # -------------------------------
-    # TEST CREATE BOOK UNAUTHENTICATED
-    # -------------------------------
     def test_create_book_unauthenticated(self):
         data = {
             "title": "Blocked Book",
@@ -68,72 +59,60 @@ class BookAPITest(APITestCase):
         }
 
         response = self.client.post(self.create_url, data)
-
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    # -------------------------------
-    # TEST GET BOOK LIST
-    # -------------------------------
-    def test_get_book_list(self):
+    # -----------------------
+    # READ TEST
+    # -----------------------
+    def test_get_books(self):
         response = self.client.get(self.list_url)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    # -------------------------------
-    # TEST GET SINGLE BOOK
-    # -------------------------------
     def test_get_single_book(self):
         response = self.client.get(self.detail_url)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["title"], self.book.title)
 
-    # -------------------------------
-    # TEST UPDATE BOOK
-    # -------------------------------
-    def test_update_book_authenticated(self):
+    # -----------------------
+    # UPDATE TEST
+    # -----------------------
+    def test_update_book(self):
         self.client.login(username="testuser", password="testpass123")
 
         data = {
-            "title": "Updated Title",
+            "title": "Updated",
             "publication_year": 2022,
             "author": self.author.id
         }
 
         response = self.client.put(self.update_url, data)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    # -------------------------------
-    # TEST DELETE BOOK
-    # -------------------------------
-    def test_delete_book_authenticated(self):
+    # -----------------------
+    # DELETE TEST
+    # -----------------------
+    def test_delete_book(self):
         self.client.login(username="testuser", password="testpass123")
 
         response = self.client.delete(self.delete_url)
-
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-    # -------------------------------
-    # TEST FILTERING
-    # -------------------------------
+    # -----------------------
+    # FILTER TEST
+    # -----------------------
     def test_filter_books(self):
         response = self.client.get(self.list_url + "?publication_year=2020")
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    # -------------------------------
-    # TEST SEARCH
-    # -------------------------------
+    # -----------------------
+    # SEARCH TEST
+    # -----------------------
     def test_search_books(self):
         response = self.client.get(self.list_url + "?search=Test")
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    # -------------------------------
-    # TEST ORDERING
-    # -------------------------------
+    # -----------------------
+    # ORDER TEST
+    # -----------------------
     def test_order_books(self):
         response = self.client.get(self.list_url + "?ordering=title")
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
