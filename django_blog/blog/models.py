@@ -1,6 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
     
+# ---------------------------
+# Tag Model
+# ---------------------------  
+class Tag(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+
 class Post(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
@@ -8,9 +17,11 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    tags = models.ManyToManyField(Tag, blank=True, related_name="posts")
+    
     def __str__(self):
         return self.title
-
+    
 # ---------------------------
 # Comment Model
 # ---------------------------
@@ -23,3 +34,5 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.author.username} on {self.post.title}"
+    
+    

@@ -7,5 +7,11 @@
     <h1>Django Blog</h1>
     <hr>
     {% block content %}{% endblock %}
+
+    <form method="GET" action="{% url 'search' %}">
+    <input type="text" name="q" placeholder="Search posts..." value="{{ request.GET.q }}">
+    <button type="submit">Search</button>
+</form>
+
 </body>
 </html>

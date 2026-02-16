@@ -3,11 +3,19 @@ from .models import Post
 from django.contrib.auth.models import User
 from .models import Comment
 
+from .models import Post, Tag
+
 class PostForm(forms.ModelForm):
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        required=False,
+        widget=forms.CheckboxSelectMultiple
+    )
+
     class Meta:
         model = Post
-        fields = ['title', 'content']
-
+        fields = ['title', 'content', 'tags']
+        
 class RegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     password2 = forms.CharField(widget=forms.PasswordInput, label="Confirm password")
