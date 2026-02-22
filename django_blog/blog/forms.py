@@ -1,19 +1,16 @@
 from taggit.forms import TagWidget
 from django import forms
-from .models import Post
+from .models import Post, Comment
 from django.contrib.auth.models import User
-from .models import Comment
 
 class PostForm(forms.ModelForm):
-    tags = forms.CharField(
-        required=False,
-        widget=TagWidget()
-    )
-
     class Meta:
         model = Post
         fields = ['title', 'content', 'tags']
-        
+        widget = {
+            'tags': TagWidget(),
+        }
+    
 class RegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     password2 = forms.CharField(widget=forms.PasswordInput, label="Confirm password")
@@ -37,7 +34,9 @@ class ProfileForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     content = forms.CharField(
         label="", 
-        widget=forms.Textarea(attrs={"rows": 3, "placeholder": "Write your comment..."})
+        widget=forms.Textarea(attrs={
+            "rows": 3,
+            "placeholder": "Write your comment..."})
     )
 
     class Meta:

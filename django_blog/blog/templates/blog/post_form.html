@@ -1,22 +1,30 @@
-from django import forms
-from .models import Post, Comment
+{% extends "blog/base.html" %}
 
-class PostForm(forms.ModelForm):
-    tags = forms.CharField(
-        required=False,
-        widget=TagWidget()
-    )
+{% block content %}
+  <h2>{% if form.instance.pk %}Update{% else %}Create{% endif %} Post</h2>
 
-    class Meta:
-        model = Post
-        fields = ['title', 'content', 'tags']
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
 
-class CommentForm(forms.ModelForm):
-    content = forms.CharField(
-        label="", 
-        widget=forms.Textarea(attrs={"rows": 3, "placeholder": "Write your comment..."})
-    )
+    <div>
+      {{ form.title.label_tag }}
+      {{ form.title }}
+      {{ form.title.errors }}
+    </div>
 
-    class Meta:
-        model = Comment
-        fields = ["content"]
+    <div>
+      {{ form.content.label_tag }}
+      {{ form.content }}
+      {{ form.content.errors }}
+    </div>
+
+    <div>
+      {{ form.tags.label_tag }}
+      {{ form.tags }}  <!-- This renders the TagWidget -->
+      {{ form.tags.errors }}
+    </div>
+
+    <button type="submit">Submit</button>
+  </form>
+{% endblock %}
