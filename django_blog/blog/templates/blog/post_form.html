@@ -1,11 +1,17 @@
-{% extends "blog/base.html" %}
-{% block content %}
-<h2>Post Form</h2>
+from django import forms
+from .models import Post, Comment
 
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-</form>
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'content', 'tags']
 
-{% endblock %}
+class CommentForm(forms.ModelForm):
+    content = forms.CharField(
+        label="", 
+        widget=forms.Textarea(attrs={"rows": 3, "placeholder": "Write your comment..."})
+    )
+
+    class Meta:
+        model = Comment
+        fields = ["content"]
